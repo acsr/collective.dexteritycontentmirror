@@ -40,7 +40,4 @@
     <!-- Schema Transformers -->
     <include file="transform.zcml"/>
 
-    <!-- Example settings -->
-    <include file="setting-example.zcml"/>
-
 </configure>

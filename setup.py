@@ -6,7 +6,7 @@ version = '1.0'
 setup(name='collective.dexteritycontentmirror',
       version=version,
       description="Dexterity Content Mirror",
-      long_description=open("README.txt").read() + "\n" +
+      long_description=open("README.rst").read() + "\n" +
                        open(os.path.join("docs", "HISTORY.txt")).read(),
       classifiers=[
         "Framework :: Plone",

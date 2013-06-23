@@ -3,7 +3,7 @@
 
     <!-- Setup a database connection -->
     <mirror:engine
-        url="postgresql://localhost/contentmirror"
+        url="postgresql://postgres:postgres@localhost/plone"
         name="mirror-db"
         echo="True"
         />
