@@ -16,6 +16,10 @@
     <implements interface=".interfaces.IStringField"/>
   </class>
 
+  <class class="zope.schema.List">
+    <implements interface=".interfaces.IStringField"/>
+  </class>
+
   <class class="zope.schema.Int">
     <implements interface=".interfaces.IIntegerField"/>
   </class>

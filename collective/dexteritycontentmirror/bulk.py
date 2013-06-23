@@ -109,7 +109,7 @@ def spoof_request(app):
 def check_peer(obj):
     registry = component.queryUtility(IPeerRegistry)
     if not obj.portal_type in registry:
-        print("Loading model for {0}".format(obj.portal_type))
+        print("LOAD MODEL {0}".format(obj.portal_type))
         load(obj.portal_type)
 
 
@@ -195,4 +195,5 @@ def run_bulk_as_script(threshold=500):
 # five.grok, which scans all modules, does not try to execute the script while
 # modules are being loaded on the start-up
 if "app" in locals():
+    #sys.argv = sys.argv[2:]
     run_bulk_as_script()

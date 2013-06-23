@@ -28,7 +28,7 @@ def setup_parser():
     parser.add_option('-d', '--drop', dest="drop",
         action="store_true", default=False,
         help="Drop Tables")
-    parser.add_option('-n', '--nocreate', dest="create",
+    parser.add_option('-n', '--nocreate', dest="no_create",
         action="store_true", default=False,
         help="Do Not Create Tables")
     return parser
@@ -86,15 +86,16 @@ def run_ddl_as_script():
     portal_types = getToolByName(context, "portal_types")
     for portal_type in portal_types:
         if has_behavior(portal_type, behaviors.IMirroredContent):
-            print('Loading model for {0}'.format(portal_type))
+            print('LOAD MODEL {0}'.format(portal_type))
             loader.load(portal_type)
 
     if options.drop:
         schema.metadata.drop_all()
-    if not options.create:
+    if not options.no_create:
         schema.metadata.create_all()
 
 
 # Detect if run as a bin/instance run script
 if "app" in locals():
+    #sys.argv = sys.argv[2:]
     run_ddl_as_script()
