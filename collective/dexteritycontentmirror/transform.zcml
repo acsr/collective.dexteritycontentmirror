@@ -1,0 +1,69 @@
+<configure xmlns="http://namespaces.zope.org/zope">
+
+  <adapter
+     for=".interfaces.IStringField .interfaces.ISchemaTransformer"
+     provides=".interfaces.IFieldTransformer"
+     factory=".transform.StringTransform"
+     />
+
+  <adapter
+     for=".interfaces.ITextField .interfaces.ISchemaTransformer"
+     provides=".interfaces.IFieldTransformer"
+     factory=".transform.TextTransform"
+     />
+     
+  <adapter
+     for=".interfaces.IRichTextField .interfaces.ISchemaTransformer"
+     provides=".interfaces.IFieldTransformer"
+     factory=".transform.RichTextTransform"
+     />
+     
+  <adapter
+     for=".interfaces.IFileField .interfaces.ISchemaTransformer"
+     provides=".interfaces.IFieldTransformer"
+     factory=".transform.FileTransform"
+     />     
+
+  <adapter
+     for=".interfaces.IImageField .interfaces.ISchemaTransformer"
+     provides=".interfaces.IFieldTransformer"
+     factory=".transform.ImageTransform"
+     />     
+     
+  <adapter
+     for=".interfaces.ILinesField .interfaces.ISchemaTransformer"
+     provides=".interfaces.IFieldTransformer"
+     factory=".transform.LinesTransform"
+     />
+     
+  <adapter
+     for=".interfaces.IIntegerField .interfaces.ISchemaTransformer"
+     provides=".interfaces.IFieldTransformer"
+     factory=".transform.IntegerTransform"
+     />     
+     
+  <adapter
+     for=".interfaces.IFloatField .interfaces.ISchemaTransformer"
+     provides=".interfaces.IFieldTransformer"
+     factory=".transform.FloatTransform"
+     />          
+
+  <adapter
+     for=".interfaces.IDateTimeField .interfaces.ISchemaTransformer"
+     provides=".interfaces.IFieldTransformer"
+     factory=".transform.DateTimeTransform"
+     />          
+
+  <adapter
+     for=".interfaces.IBooleanField .interfaces.ISchemaTransformer"
+     provides=".interfaces.IFieldTransformer"
+     factory=".transform.BooleanTransform"
+     />       
+
+  <adapter
+     for=".interfaces.IReferenceField .interfaces.ISchemaTransformer"
+     provides=".interfaces.IFieldTransformer"
+     factory=".transform.ReferenceTransform"
+     />     
+          
+</configure>     

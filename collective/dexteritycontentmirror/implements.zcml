@@ -1,0 +1,73 @@
+<configure xmlns="http://namespaces.zope.org/zope">
+
+  <class class="sqlalchemy.MetaData">
+    <implements interface=".interfaces.IMetaData"/>
+  </class>
+
+  <class class="zope.schema.Tuple">
+    <implements interface=".interfaces.IStringField"/>
+  </class>
+
+  <class class="zope.schema.Choice">
+    <implements interface=".interfaces.IStringField"/>
+  </class>
+
+  <class class="zope.schema.Set">
+    <implements interface=".interfaces.IStringField"/>
+  </class>
+
+  <class class="zope.schema.Int">
+    <implements interface=".interfaces.IIntegerField"/>
+  </class>
+
+  <class class="zope.schema.Float">
+    <implements interface=".interfaces.IFloatField"/>
+  </class>
+
+  <class class="zope.schema.Date">
+    <implements interface=".interfaces.IDateTimeField"/>
+  </class>
+
+  <class class="zope.schema.Datetime">
+    <implements interface=".interfaces.IDateTimeField"/>
+  </class>
+
+  <class class="zope.schema.Bool">
+    <implements interface=".interfaces.IBooleanField"/>
+  </class>
+
+  <class class="zope.schema.TextLine">
+    <implements interface=".interfaces.ITextField"/>
+  </class>
+
+  <class class="zope.schema.Text">
+    <implements interface=".interfaces.ILinesField"/>
+  </class>
+
+  <class class="plone.app.textfield.RichText">
+    <implements interface=".interfaces.IRichTextField"/>
+  </class>
+
+  <class class="plone.namedfile.field.NamedFile">
+    <implements interface=".interfaces.IFileField"/>
+  </class>
+
+  <class class="plone.namedfile.field.NamedImage">
+    <implements interface=".interfaces.IImageField"/>
+  </class>
+
+  <class class="plone.namedfile.field.NamedBlobFile">
+    <implements interface=".interfaces.IFileField"/>
+  </class>
+
+  <class class="plone.namedfile.field.NamedBlobImage">
+    <implements interface=".interfaces.IImageField"/>
+  </class>
+
+  <!-- TODO:
+  <class class="Products.Archetypes.Field.ReferenceField">
+    <implements interface=".interfaces.IReferenceField"/>
+  </class>
+  -->
+
+</configure>
