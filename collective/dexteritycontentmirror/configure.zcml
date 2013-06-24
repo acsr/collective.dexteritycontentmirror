@@ -29,7 +29,7 @@
     <plone:behavior
         title="Mirrored Content"
         description="Store Content to a Relational Database"
-        provides=".interfaces.IMirroredContent"
+        provides=".behaviors.IMirroredContent"
         factory=".behaviors.MirroredContent"
         for="plone.dexterity.interfaces.IDexterityContent"
         />

@@ -16,6 +16,7 @@ from zope import component
 from DateTime import DateTime
 
 from collective.dexteritycontentmirror import interfaces
+from collective.dexteritycontentmirror import behaviors
 from collective.dexteritycontentmirror import session
 from collective.dexteritycontentmirror import schema
 from collective.dexteritycontentmirror.interfaces import IPeerRegistry
@@ -151,7 +152,7 @@ def run_bulk_as_script(threshold=500):
         except: # got to keep on moving
             continue
 
-        mirrored = interfaces.IMirroredContent(obj, None)
+        mirrored = behaviors.IMirroredContent(obj, None)
         if mirrored is None:
             expunge(obj)
             continue

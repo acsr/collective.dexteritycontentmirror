@@ -10,14 +10,6 @@ from zope.interface import interface
 from collective.dexteritycontentmirror import MessageFactory as _
 
 
-class IMirroredContent(model.Schema):
-    """
-    Marker/Form interface for MirroredContent behavior
-    """
-
-alsoProvides(IMirroredContent, IFormFieldProvider)
-
-
 class IMirrored(interface.Interface):
     """
     Marker interface, signifying that the content should be mirrored

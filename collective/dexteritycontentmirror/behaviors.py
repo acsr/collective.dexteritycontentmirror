@@ -1,12 +1,20 @@
+from zope import schema
+from zope.component import adapts
+from zope.interface import alsoProvides
+from zope.interface import implements
 from plone.autoform.interfaces import IFormFieldProvider
 from plone.dexterity.interfaces import IDexterityContent
 from plone.supermodel import model
-from zope import schema
-from zope.component import adapts
-from zope.interface import alsoProvides, implements
 
 from collective.dexteritycontentmirror import MessageFactory as _
-from collective.dexteritycontentmirror.interfaces import IMirroredContent
+
+
+class IMirroredContent(model.Schema):
+    """
+    Marker/Form interface for MirroredContent behavior
+    """
+
+alsoProvides(IMirroredContent, IFormFieldProvider)
 
 
 class MirroredContent(object):

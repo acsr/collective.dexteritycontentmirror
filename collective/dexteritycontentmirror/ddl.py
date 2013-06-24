@@ -16,6 +16,7 @@ from plone.behavior.interfaces import IBehavior
 from plone.behavior.interfaces import IBehaviorAssignable
 
 from collective.dexteritycontentmirror import interfaces
+from collective.dexteritycontentmirror import behaviors
 from collective.dexteritycontentmirror import session
 from collective.dexteritycontentmirror import schema
 from collective.dexteritycontentmirror import loader
@@ -84,7 +85,7 @@ def run_ddl_as_script():
     context = aq_inner(site)
     portal_types = getToolByName(context, "portal_types")
     for portal_type in portal_types:
-        if has_behavior(portal_type, interfaces.IMirroredContent):
+        if has_behavior(portal_type, behaviors.IMirroredContent):
             print('Loading model for {0}'.format(portal_type))
             loader.load(portal_type)
 

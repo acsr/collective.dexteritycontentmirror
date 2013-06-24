@@ -12,6 +12,11 @@ recipe to manage your project, you can do this:
         ...
         collective.dexteritycontentmirror
        
+    [versions]
+    ...
+    plone.app.dexterity = 2.0.8
+    collective.indexing = 2.0b1
+
 * Re-run buildout, e.g. with:
 
     $ ./bin/buildout
