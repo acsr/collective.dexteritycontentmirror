@@ -27,6 +27,9 @@ class Serializer(grok.Adapter):
         self.context = context
 
     def add(self):
+        peer = schema.fromUID(self.context.UID())
+        if not peer is None:
+            return
         registry = component.getUtility(interfaces.IPeerRegistry)
         peer = registry[self.context.portal_type]()
         session = Session()

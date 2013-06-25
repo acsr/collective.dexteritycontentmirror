@@ -11,7 +11,7 @@ import transaction
 import sqlalchemy as rdb
 from zope.site.hooks import setHooks
 from zope.site.hooks import setSite
-from zope.interface import directlyProvides
+from zope.interface import alsoProvides
 from zope import component
 from DateTime import DateTime
 
@@ -165,7 +165,8 @@ def run_bulk_as_script(threshold=500):
         # so we use update, which dispatches to add if no db
         # state is found.
         print("Importing object {0}".format('/'.join(obj.getPhysicalPath())))
-        directlyProvides(obj, interfaces.IMirrored)
+        if not interfaces.IMirrored.providedBy(obj):
+            alsoProvides(obj, interfaces.IMirrored)
         interfaces.ISerializer(obj).update()
         expunge(obj)
 

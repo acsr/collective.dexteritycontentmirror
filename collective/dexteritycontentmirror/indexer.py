@@ -1,6 +1,6 @@
 import logging
 from five import grok
-from zope.interface import directlyProvides
+from zope.interface import alsoProvides
 from zope import component
 from Acquisition import aq_base
 from collective.indexing.interfaces import IIndexQueueProcessor
@@ -8,6 +8,7 @@ from collective.indexing.indexer import IPortalCatalogQueueProcessor
 
 from collective.dexteritycontentmirror import interfaces
 from collective.dexteritycontentmirror import behaviors
+from collective.dexteritycontentmirror import schema
 from collective.dexteritycontentmirror.loader import load
 
 
@@ -20,12 +21,11 @@ class IndexQueueProcessor(grok.GlobalUtility):
     grok.provides(IPortalCatalogQueueProcessor)
     grok.name(u'contentmirrorindexer')
 
-    def _check_peer(self, obj):
+    def _check_model(self, obj):
         registry = component.queryUtility(interfaces.IPeerRegistry)
         if not obj.portal_type in registry:
-            LOGGER.info("Loading model for {0}".format(obj.portal_type))
+            LOGGER.info("LOAD MODEL {0}".format(obj.portal_type))
             load(obj.portal_type)
-
 
     def index(self, obj, attributes=[]):
         mirrored = behaviors.IMirroredContent(obj, None)
@@ -34,9 +34,10 @@ class IndexQueueProcessor(grok.GlobalUtility):
 
         LOGGER.info("INDEX {0}".format('/'.join(obj.getPhysicalPath())))
 
-        self._check_peer(obj)
+        self._check_model(obj)
 
-        directlyProvides(obj, interfaces.IMirrored)
+        if not interfaces.IMirrored.providedBy(obj):
+            alsoProvides(obj, interfaces.IMirrored)
         interfaces.ISerializer(obj).add()
 
     def reindex(self, obj, attributes=[]):
@@ -46,9 +47,10 @@ class IndexQueueProcessor(grok.GlobalUtility):
 
         LOGGER.info("REINDEX {0}".format('/'.join(obj.getPhysicalPath())))
 
-        self._check_peer(obj)
+        self._check_model(obj)
 
-        directlyProvides(obj, interfaces.IMirrored)
+        if not interfaces.IMirrored.providedBy(obj):
+            alsoProvides(obj, interfaces.IMirrored)
         interfaces.ISerializer(obj).update()
 
     def unindex(self, obj):
@@ -59,12 +61,13 @@ class IndexQueueProcessor(grok.GlobalUtility):
         mirrored = behaviors.IMirroredContent(obj, None)
         if mirrored is None:
             return
-        
+
         LOGGER.info("UNINDEX {0}".format('/'.join(obj.getPhysicalPath())))
 
-        self._check_peer(obj)
+        self._check_model(obj)
 
-        directlyProvides(obj, interfaces.IMirrored)
+        if not interfaces.IMirrored.providedBy(obj):
+            alsoProvides(obj, interfaces.IMirrored)
         interfaces.ISerializer(obj).delete()
 
     def begin(self):

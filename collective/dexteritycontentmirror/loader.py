@@ -4,7 +4,7 @@ zcml directives, its responsible for loading/generating the tables,
 and creating the rdb mapped peer classes.
 """
 from zope import component
-from zope.interface import directlyProvides
+from zope.interface import alsoProvides
 from plone.dexterity.utils import createContent
 
 from collective.dexteritycontentmirror import schema
@@ -22,7 +22,7 @@ class ModelLoader(object):
             raise KeyError("Duplicate %r"%klass)
 
         instance = createContent(klass)
-        directlyProvides(instance, interfaces.IMirrored)
+        alsoProvides(instance, interfaces.IMirrored)
 
         transformer = self.transform(instance)
         peer_class = self.peer(instance, transformer)
