@@ -1,7 +1,8 @@
 import logging
 import sqlalchemy as rdb
 from five import grok
-from zope import interface, component
+from zope import interface
+from zope import component
 from zope.app.container.interfaces import IContainer
 from plone import api
 
@@ -13,6 +14,7 @@ except:
 from collective.dexteritycontentmirror import schema
 from collective.dexteritycontentmirror import interfaces
 from collective.dexteritycontentmirror.session import Session
+from collective.dexteritycontentmirror.loader import load
 
 
 LOGGER = logging.getLogger('collective.dexteritycontentmirror')
@@ -84,6 +86,7 @@ class Serializer(grok.Adapter):
         if uid is None:
             return
         uid = uid()
+        self._check_model(container)
         container_peer = schema.fromUID(uid)
         if not container_peer:
             serializer = interfaces.ISerializer(container, None)
@@ -91,3 +94,9 @@ class Serializer(grok.Adapter):
                 return
             container_peer = serializer.add()
         peer.parent = container_peer
+
+    def _check_model(self, obj):
+        registry = component.queryUtility(interfaces.IPeerRegistry)
+        if not obj.portal_type in registry:
+            LOGGER.info("LOAD MODEL {0}".format(obj.portal_type))
+            load(obj.portal_type)
