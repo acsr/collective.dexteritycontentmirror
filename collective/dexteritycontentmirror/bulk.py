@@ -194,5 +194,4 @@ def run_bulk_as_script(threshold=500):
 # five.grok, which scans all modules, does not try to execute the script while
 # modules are being loaded on the start-up
 if "app" in locals():
-    sys.argv = sys.argv[2:]
     run_bulk_as_script()

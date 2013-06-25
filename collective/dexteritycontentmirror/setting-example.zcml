@@ -3,15 +3,15 @@
 
     <!-- Setup a database connection -->
     <mirror:engine
-        url="postgresql://postgres:postgres@localhost/plone"
-        name="mirror-db"
-        echo="True"
-        />
+    url="postgresql://postgres:postgres@localhost/plone"
+    name="mirror-db"
+    echo="True"
+    />
 
     <!-- Bind the database connection to the contentmirror rdb schema -->
     <mirror:bind
-        engine="mirror-db"
-        metadata="collective.dexteritycontentmirror.schema.metadata"
-        />
+    engine="mirror-db"
+    metadata="collective.dexteritycontentmirror.schema.metadata"
+    />
 
 </configure>

@@ -97,5 +97,4 @@ def run_ddl_as_script():
 
 # Detect if run as a bin/instance run script
 if "app" in locals():
-    sys.argv = sys.argv[2:]
     run_ddl_as_script()
