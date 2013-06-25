@@ -189,7 +189,9 @@ class LinesTransform(StringTransform):
         storage = self.context.interface(instance)
         value = self.context.get(storage)
         if isinstance(value, (list, tuple, set)):
-            value = "\n".join(value)
+            value = "\n".join([
+                ';'.join('%s=%s' % (i, v[i]) for i in v) if isinstance(v, (dict,))
+                else v for v in value])
         setattr(peer, self.name, value)
 
 
