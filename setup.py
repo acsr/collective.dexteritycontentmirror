@@ -25,7 +25,6 @@ setup(name='collective.dexteritycontentmirror',
       install_requires=[
           'setuptools',
           'collective.indexing >= 2.0b1',
-          'plone.api >= 1.0.0-rc.1',
           'plone.app.dexterity [grok] >= 2.0.8',
           'plone.namedfile [blobs]',
           'zope.sqlalchemy',

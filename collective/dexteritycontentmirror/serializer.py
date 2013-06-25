@@ -4,7 +4,6 @@ from five import grok
 from zope import interface
 from zope import component
 from zope.app.container.interfaces import IContainer
-from plone import api
 
 try: # mock test environment compatibility
     from OFS.interfaces import IOrderedContainer
@@ -69,7 +68,12 @@ class Serializer(grok.Adapter):
         if portal_url:
             peer.relative_path = "/".join(
                 portal_url.getRelativeContentPath(self.context))
-        peer.status = api.content.get_state(obj=self.context)
+
+        wf_tool = getattr(self.context, 'portal_workflow', None)
+        if wf_tool is None:
+            return
+        peer.status = wf_tool.getCatalogVariablesFor(
+            self.context).get('review_state')
 
         container = self.context.getParentNode()
         if not IOrderedContainer.providedBy(container):
