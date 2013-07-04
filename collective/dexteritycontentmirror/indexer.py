@@ -9,7 +9,7 @@ from collective.indexing.indexer import IPortalCatalogQueueProcessor
 from collective.dexteritycontentmirror import interfaces
 from collective.dexteritycontentmirror import behaviors
 from collective.dexteritycontentmirror import schema
-from collective.dexteritycontentmirror.loader import load
+from collective.dexteritycontentmirror import loader
 
 
 LOGGER = logging.getLogger('collective.dexteritycontentmirror')
@@ -21,11 +21,18 @@ class IndexQueueProcessor(grok.GlobalUtility):
     grok.provides(IPortalCatalogQueueProcessor)
     grok.name(u'contentmirrorindexer')
 
+    def __init__(self):
+        self._has_models = False
+
     def _check_model(self, obj):
+        if not self._has_models:
+            loader.load_models()
+            self._has_models = True
+
         registry = component.queryUtility(interfaces.IPeerRegistry)
         if not obj.portal_type in registry:
             LOGGER.info("LOAD MODEL {0}".format(obj.portal_type))
-            load(obj.portal_type)
+            loader.load(obj.portal_type)
 
     def index(self, obj, attributes=[]):
         mirrored = behaviors.IMirroredContent(obj, None)

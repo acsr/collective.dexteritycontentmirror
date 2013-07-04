@@ -4,6 +4,43 @@
     <implements interface=".interfaces.IMetaData"/>
   </class>
 
+<!-- zope.schema fields status
+  ASCII
+  ASCIILine
+  Bool - done
+  Bytes
+  BytesLine
+  Choice - done
+  Container
+  Date - done
+  Datetime - done
+  Decimal
+  Dict
+  DottedName
+  Field
+  Float - done
+  FrozenSet
+  Id
+  Int - done
+  InterfaceField
+  Iterable
+  List - done
+  MinMaxLen
+  NativeString
+  NativeStringLine
+  Object
+  Orderable
+  Password
+  Set - done
+  SourceText - done
+  Text - done
+  TextLine - done
+  Time
+  Timedelta
+  Tuple - done
+  URI
+-->
+
   <class class="zope.schema.Tuple">
     <implements interface=".interfaces.IStringField"/>
   </class>
@@ -68,10 +105,8 @@
     <implements interface=".interfaces.IImageField"/>
   </class>
 
-  <!-- TODO:
-  <class class="Products.Archetypes.Field.ReferenceField">
+  <class class="z3c.relationfield.RelationList">
     <implements interface=".interfaces.IReferenceField"/>
   </class>
-  -->
 
 </configure>

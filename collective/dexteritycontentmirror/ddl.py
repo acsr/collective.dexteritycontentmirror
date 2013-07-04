@@ -8,16 +8,8 @@ import optparse
 import sqlalchemy as rdb
 from zope.site.hooks import setHooks
 from zope.site.hooks import setSite
-from zope.component import queryUtility
 from Acquisition import aq_inner
-from Products.CMFCore.utils import getToolByName
-from plone.dexterity.interfaces import IDexterityFTI
-from plone.behavior.interfaces import IBehavior
-from plone.behavior.interfaces import IBehaviorAssignable
 
-from collective.dexteritycontentmirror import interfaces
-from collective.dexteritycontentmirror import behaviors
-from collective.dexteritycontentmirror import session
 from collective.dexteritycontentmirror import schema
 from collective.dexteritycontentmirror import loader
 
@@ -47,18 +39,6 @@ def spoof_request(app):
     return app
 
 
-def has_behavior(portal_type, klass):
-    fti = queryUtility(IDexterityFTI, portal_type, None)
-    if not fti is None:
-        for behavior_name in fti.behaviors:
-            behavior_interface = None
-            behavior_instance = queryUtility(IBehavior, name=behavior_name)
-            if not behavior_instance is None and \
-                behavior_instance.interface is klass:
-                return True
-    return False
-
-
 def run_ddl_as_script():
     parser = setup_parser()
     options, args = parser.parse_args()
@@ -82,12 +62,7 @@ def run_ddl_as_script():
     site.setupCurrentSkin(app.REQUEST)
 
     # Load portal types with enabled IMirroredContent behavior
-    context = aq_inner(site)
-    portal_types = getToolByName(context, "portal_types")
-    for portal_type in portal_types:
-        if has_behavior(portal_type, behaviors.IMirroredContent):
-            print('LOAD MODEL {0}'.format(portal_type))
-            loader.load(portal_type)
+    loader.load_models(site)
 
     if options.drop:
         schema.metadata.drop_all()

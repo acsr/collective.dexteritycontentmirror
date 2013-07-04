@@ -10,10 +10,12 @@ from zope import component
 from zope.schema import getFieldsInOrder
 from plone.dexterity.utils import iterSchemata
 from plone.app.textfield.value import RichTextValue
+from z3c.relationfield import RelationList
 
 from collective.dexteritycontentmirror.session import Session
 from collective.dexteritycontentmirror import interfaces
 from collective.dexteritycontentmirror import schema
+from collective.dexteritycontentmirror.loader import load
 
 
 LOGGER = logging.getLogger('collective.dexteritycontentmirror')
@@ -298,7 +300,7 @@ class ReferenceTransform(NamedFieldTransform):
         relation table. For single valued references we'll directly create
         a foreign key reference to the content table.
         """
-        if self.context.multiValued:
+        if isinstance(self.context, (RelationList,)):
             return
         column_name = self.name+'_id'
         column = rdb.Column(
@@ -328,6 +330,12 @@ class ReferenceTransform(NamedFieldTransform):
                 return
             setattr(peer, self.name, reference_peer)
 
+    def _check_model(self, obj):
+        registry = component.queryUtility(interfaces.IPeerRegistry)
+        if not obj.portal_type in registry:
+            LOGGER.info("LOAD MODEL {0}".format(obj.portal_type))
+            load(obj.portal_type)
+
     def _fetch_peer(self, ob):
         peer_ob = schema.fromUID(ob.UID())
         if peer_ob is None:
@@ -338,13 +346,20 @@ class ReferenceTransform(NamedFieldTransform):
         return peer_ob
 
     def copy(self, instance, peer):
-        single_value = not self.context.multiValued
+        single_value = not isinstance(self.context, (RelationList,))
         if single_value:
             return self.copySingleValue(instance, peer)
 
         storage = self.context.interface(instance)
         value = self.context.get(storage)
         if not value:
+            if len(peer.relations) > 0:
+                for relation in peer.relations:
+                    Session().query(schema.Relation)\
+                        .filter(schema.Relation.source_id==peer.content_id,\
+                                schema.Relation.target_id==relation.target.content_id,\
+                                schema.Relation.relationship==relation.relationship)\
+                        .delete()
             return
 
         if not isinstance(value, (list, tuple)):
@@ -354,18 +369,23 @@ class ReferenceTransform(NamedFieldTransform):
 
         rel_map = dict([((r.relationship, r.target.content_uid), r)
                         for r in peer.relations])
+
         oids_seen = set() # oids of the current reference values of this field
 
-        for ob in value:
+        relationship = self.name
+
+        for relationValue in value:
+            ob = relationValue.to_object
             t_oid = ob.UID()
             oids_seen.add(t_oid)
 
             # skip if the object is already related
-            related = (self.context.relationship, t_oid) in rel_map
+            related = (relationship, t_oid) in rel_map
             if related:
                 continue
 
             # fetch the remote side's peer
+            self._check_model(ob)
             reference_peer = self._fetch_peer(ob)
             if not reference_peer:
                 continue
@@ -373,10 +393,15 @@ class ReferenceTransform(NamedFieldTransform):
             # create the relation
             relation = schema.Relation(peer,
                                        reference_peer,
-                                       self.context.relationship)
+                                       relationship)
 
         # delete old values for multi valued relations
         rel_oids = set([oid for rel_type, oid in rel_map
-                        if rel_type == self.context.relationship])
+                        if rel_type == relationship])
         for oid in (rel_oids - oids_seen):
-            Session().delete(rel_map[(self.context.relationship, oid)])
+            relation = rel_map[(relationship, oid)]
+            Session().query(schema.Relation)\
+                .filter(schema.Relation.source_id==peer.content_id,\
+                        schema.Relation.target_id==relation.target.content_id,\
+                        schema.Relation.relationship==relation.relationship)\
+                .delete()
