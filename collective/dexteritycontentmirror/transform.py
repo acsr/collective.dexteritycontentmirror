@@ -354,12 +354,9 @@ class ReferenceTransform(NamedFieldTransform):
         value = self.context.get(storage)
         if not value:
             if len(peer.relations) > 0:
+                # delete old relations
                 for relation in peer.relations:
-                    Session().query(schema.Relation)\
-                        .filter(schema.Relation.source_id==peer.content_id,\
-                                schema.Relation.target_id==relation.target.content_id,\
-                                schema.Relation.relationship==relation.relationship)\
-                        .delete()
+                    Session().delete(relation)
             return
 
         if not isinstance(value, (list, tuple)):
@@ -375,6 +372,9 @@ class ReferenceTransform(NamedFieldTransform):
         relationship = self.name
 
         for relationValue in value:
+            if relationValue.isBroken:
+                continue
+
             ob = relationValue.to_object
             t_oid = ob.UID()
             oids_seen.add(t_oid)
@@ -400,8 +400,4 @@ class ReferenceTransform(NamedFieldTransform):
                         if rel_type == relationship])
         for oid in (rel_oids - oids_seen):
             relation = rel_map[(relationship, oid)]
-            Session().query(schema.Relation)\
-                .filter(schema.Relation.source_id==peer.content_id,\
-                        schema.Relation.target_id==relation.target.content_id,\
-                        schema.Relation.relationship==relation.relationship)\
-                .delete()
+            Session().delete(relation)

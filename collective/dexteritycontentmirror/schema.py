@@ -129,11 +129,8 @@ def initialize_mapper():
                    'relations': orm.relation(
                        Relation,
                        cascade="all, delete-orphan",
-                       primaryjoin=(
-                           content.c.content_id==relations.c.source_id),
-                       backref=orm.backref(
-                           "source",
-                           remote_side=[relations.c.source_id]))})
+                       primaryjoin=content.c.content_id==relations.c.source_id,
+                       backref=orm.backref("source"))})
 
     orm.mapper(Relation, relations,
                properties = {
